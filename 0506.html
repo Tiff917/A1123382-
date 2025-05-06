@@ -13,12 +13,18 @@
         }
         header {
             background-color: #c1c1c1;
-            padding: 1rem;
+            padding: 3rem;
             text-align: center;
             color: rgb(73, 73, 73);
         }
-        header h1, header h2 {
-            margin: 0.5rem 0;
+        header h1{
+            font-size: 3rem;
+            margin: 1.5rem;
+            color: rgb(73, 73, 73);
+        }
+        header h2 {
+            font-size: 1.75rem;
+            margin: 1.5rem;
             color: rgb(73, 73, 73);
         }
         main {
@@ -30,7 +36,7 @@
             gap: 2rem;
         }
         .flip-container {
-            perspective: 1000px; /* 用於 3D 翻轉效果 */
+            perspective: 1000px;
             width: 45%;
             position: relative;
         }
@@ -45,7 +51,7 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            backface-visibility: hidden; /* 隱藏背面 */
+            backface-visibility: hidden;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgb(73, 73, 73);
         }
@@ -64,33 +70,35 @@
         }
         .flip-card .front .chart-title {
             margin-top: 1rem;
-            font-size: 1rem;
+            font-size: 1.25rem;
             color: rgb(73, 73, 73);
-            text-align: center; /* 置中標題文字 */
-            line-height: 1.5; /* 增加行距以改善可讀性 */
+            text-align: center;
+            line-height: 1.5;
         }
         .flip-card .back {
             background: #f4f4f4;
             transform: rotateY(180deg);
             display: flex;
             align-items: center;
+            text-align: center;
             justify-content: center;
             padding: 1rem;
             color: rgb(73, 73, 73);
-            font-size: 0.9rem;
+            font-size: 1rem;
         }
         .flipped {
-            transform: rotateY(180deg); /* 翻轉效果 */
+            transform: rotateY(180deg);
         }
         .idea-section {
             width: 80%;
             margin: 2rem auto;
             text-align: center;
         }
-        .idea-section h3 {
-            font-size: 1.5rem;
+        .idea-description-wrapper h3 {
+            font-size: 2.5rem;
             color: rgb(73, 73, 73);
-            margin-bottom: 1rem;
+            margin: 1.5rem 2rem 2rem 2rem;
+            text-align: center;
         }
         .idea-images {
             display: flex;
@@ -107,14 +115,28 @@
             transition: transform 0.3s, border 0.3s;
         }
         .idea-images img:hover {
-            transform: scale(1.05);
+            transform: scale(1.2); /* 放大 */
             border-color: #888;
         }
+        .idea-description-wrapper {
+            border: 3px solid #ccc; /* 新增邊框 */
+            border-radius: 8px;
+            padding: 3rem;
+            margin: 2rem 3rem;
+            background-color:#c1c1c1;
+        }
         .idea-description {
-            font-size: 1rem;
+            font-size: 1.25rem;
             color: rgb(73, 73, 73);
-            margin-top: 1rem;
-            text-align: center; /* 置中文字對齊 */
+            text-align: center;
+            margin: 3rem ;
+        }
+        footer {
+            text-align: center;
+            background-color: #c1c1c1;
+            padding: 1rem;
+            color: rgb(73, 73, 73);
+            font-size: 1rem;
         }
     </style>
 </head>
@@ -157,38 +179,35 @@
     </main>
 
     <!-- 集點子計畫 -->
-    <section class="idea-section">
+    <section class="idea-description-wrapper">
         <h3>集點子計畫</h3>
         <div class="idea-images">
             <img id="image1" src="A1123382_蕭語婕_0325課程作業_gamma.jpg" alt="圖1" onclick="switchImages('image1', 'image2')">
             <img id="image2" src="A1123382_蕭語婕_0325課程作業_MSDesigner.jpeg" alt="圖2" onclick="switchImages('image2', 'image1')">
         </div>
-        <div class="idea-description">
-            在當今社會，高齡者的生活品質與社會參與受到越來越多的重視，特別是在高齡友善城市的八大面向中，無障礙設施的完善至關重要。然而，儘管科技進步使得增強現實（AR）和虛擬實境（VR）技術成為提升高齡者出行意願的有效工具，但許多高齡者仍然因缺乏陪伴而感到孤獨與不安。這使得親子行活動成為一個重要的解決方案，能夠增進家庭成員之間的情感聯繫。 我對興趣旅遊的熱愛，使我意識到結合自我實現與社交情感陪伴的重要性。在健康的面向上，定期的戶外活動不僅能改善高齡者的身心健康，還能提升他們的生活滿意度。根據我家鄉的老人資料洞察，許多高齡者渴望參與社會，但缺乏合適的機會和支持。
+        <div>
+            <div class="idea-description">
+                在當今社會，高齡者的生活品質與社會參與受到越來越多的重視，特別是在高齡友善城市的八大面向中，無障礙設施的完善至關重要。然而，儘管科技進步使得增強現實（AR）和虛擬實境（VR）技術成為提升高齡者出行意願的有效工具，但許多高齡者仍然因缺乏陪伴而感到孤獨與不安。這使得親子行活動成為一個重要的解決方案，能夠增進家庭成員之間的情感聯繫。 我對興趣旅遊的熱愛，使我意識到結合自我實現與社交情感陪伴的重要性。在健康的面向上，定期的戶外活動不僅能改善高齡者的身心健康，還能提升他們的生活滿意度。根據我家鄉的老人資料洞察，許多高齡者渴望參與社會，但缺乏合適的機會和支持。
+            </div>
         </div>
     </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>作者：蕭語婕</p>
+        <p>學號：A1123382</p>
+    </footer>
 
     <script>
         // 點擊翻轉卡片
         function toggleFlip(card) {
             card.classList.toggle('flipped');
+            setTimeout(() => {
+                card.classList.remove('flipped');
+            }, 5000); // 5秒後自動翻回
         }
 
-        // 切換圖片
-        function switchImages(activeId, inactiveId) {
-            const activeImage = document.getElementById(activeId);
-            const inactiveImage = document.getElementById(inactiveId);
-
-            // 交換圖片的 src 和 alt
-            const tempSrc = activeImage.src;
-            const tempAlt = activeImage.alt;
-
-            activeImage.src = inactiveImage.src;
-            activeImage.alt = inactiveImage.alt;
-
-            inactiveImage.src = tempSrc;
-            inactiveImage.alt = tempAlt;
-        }
+        
     </script>
 </body>
 </html>
