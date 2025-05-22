@@ -344,6 +344,23 @@
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             }
         }
+        
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .number-input {
+            width: 60px;
+            padding: 0.3rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: var(--text);
+            font-size: 0.9rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -359,10 +376,13 @@
             </select>
         </div>
         
-        <div class="form-group enhanced-range">
+        <div class="form-group enhanced-range" id="hue-control">
             <div class="range-header">
                 <label for="hue">色相範圍</label>
-                <output id="hue-value">0°</output>
+                <div class="input-group">
+                    <input type="number" id="hue-input" min="0" max="360" value="0" class="number-input">
+                    <output id="hue-value">0°</output>
+                </div>
             </div>
             <input 
                 type="range" 
@@ -378,7 +398,10 @@
         <div class="form-group enhanced-range">
             <div class="range-header">
                 <label for="count">顏色數量</label>
-                <output id="count-value">5</output>
+                <div class="input-group">
+                    <input type="number" id="count-input" min="2" max="12" value="5" class="number-input">
+                    <output id="count-value">5</output>
+                </div>
             </div>
             <input 
                 type="range" 
@@ -505,15 +528,61 @@
         
         // 初始化事件監聽
         document.getElementById('generate-btn').addEventListener('click', generateColorScheme);
+        
+        // 色相範圍同步
         document.getElementById('count').addEventListener('input', function() {
-            document.getElementById('count-value').textContent = this.value;
-        });
-        document.getElementById('hue').addEventListener('input', function() {
-            document.getElementById('hue-value').textContent = this.value + '°';
+            const value = this.value;
+            document.getElementById('count-value').textContent = value;
+            document.getElementById('count-input').value = value;
         });
         
-        // 預設生成一組色票
-        window.addEventListener('load', generateColorScheme);
+        document.getElementById('count-input').addEventListener('input', function() {
+            let value = parseInt(this.value);
+            if (value < 2) value = 2;
+            if (value > 12) value = 12;
+            this.value = value;
+            document.getElementById('count').value = value;
+            document.getElementById('count-value').textContent = value;
+        });
+        
+        // 顏色數量同步
+        document.getElementById('hue').addEventListener('input', function() {
+            const value = this.value;
+            document.getElementById('hue-value').textContent = value + '°';
+            document.getElementById('hue-input').value = value;
+        });
+        
+        document.getElementById('hue-input').addEventListener('input', function() {
+            let value = parseInt(this.value);
+            if (value < 0) value = 0;
+            if (value > 360) value = 360;
+            this.value = value;
+            document.getElementById('hue').value = value;
+            document.getElementById('hue-value').textContent = value + '°';
+        });
+        
+        // 色系選擇事件
+        document.getElementById('scheme').addEventListener('change', function() {
+            const hueControl = document.getElementById('hue-control');
+            if (this.value === 'grayscale') {
+                hueControl.style.display = 'none';
+            } else {
+                hueControl.style.display = 'block';
+            }
+            generateColorScheme();
+        });
+        
+        // 初始化時檢查並設置色相範圍的顯示狀態
+        window.addEventListener('load', function() {
+            const scheme = document.getElementById('scheme').value;
+            const hueControl = document.getElementById('hue-control');
+            if (scheme === 'grayscale') {
+                hueControl.style.display = 'none';
+            } else {
+                hueControl.style.display = 'block';
+            }
+            generateColorScheme();
+        });
     </script>
 </body>
 </html>
