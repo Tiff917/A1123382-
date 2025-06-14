@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=900, initial-scale=1.0">
+  <title>蕭語婕 個人簡介 - 20250603_測站雨量站情室</title>
+  <style>
+    body {
+      font-family: "Microsoft JhengHei", Arial, sans-serif;
+      background: #fff;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 15vw;
+      min-width: 180px;
+      max-width: 350px;
+      height: 100vh;
+      background: #b3b3b3;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 40px 24px 24px 24px;
+      box-sizing: border-box;
+      z-index: 100;
+    }
+    .nav {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 40px;
+    }
+    .nav a {
+      text-decoration: none;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 6px;
+      font-size: 1.2em;
+      letter-spacing: 1px;
+      transition: background 0.2s, color 0.2s;
+      display: block;
+      position: relative;
+      text-align: left;
+    }
+    .nav a:hover,
+    .nav a.active {
+      background: #a4a4a4;
+      color: #ffffff;
+    }
+    .content {
+      margin-left: 20vw;
+      padding: 40px 40px 40px 20px;
+      width: calc(75vw - 20px);
+      min-width: 250px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+    section {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 0 60px 0;
+      color: #232323;
+      font-size: 1.14em;
+      line-height: 1.8;
+      padding: 0;
+    }
+    section:last-child {
+      margin-bottom: 0;
+    }
+    h1, h2 {
+      margin-top: 0;
+      margin-bottom: 0.5em;
+      color: #2b2b2b;
+      font-size: 2em;
+      text-align: left;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .label {
+      display: inline-block;
+      min-width: 5em;
+      font-weight: bold;
+      color:#353535;
+    }
+    .info-block {
+      margin: 0.2em 0;
+      text-align: left;
+    }
+    .profile-left-area {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      max-width: 900px;
+    }
+    .single-card-area {
+      margin-bottom: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+    }
+    .profile-card {
+      background: #f5f5f5;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.11);
+      padding: 10px;
+      text-align: left;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 1.15em;
+      cursor: pointer;
+      z-index: 1;
+      outline: none;
+      min-height: 420px;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      position: static;
+      opacity: 1;
+      pointer-events: auto;
+      transform: none;
+    }
+    /* 輪播卡片覆蓋效果 */
+    .card-carousel .profile-card {
+      position: absolute;
+      left: 0; top: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .4s, transform .4s;
+      transform: translateX(32px) scale(0.99);
+    }
+    .card-carousel .profile-card.active {
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 2;
+      position: relative;
+      transform: translateX(0) scale(1);
+      transition: opacity .4s, transform .4s;
+    }
+    .card-carousel {
+      width: 70vw;
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      min-height: 540px;
+    }
+    .iframe-wrapper { width: 100%; }
+    .profile-card iframe {
+      min-height: 200px;
+      border: none;
+      border-radius: 10px;
+      background: #fff;
+      margin-top: 8px;
+      height: 373.5px;
+      max-width: 100%;
+      width: 100%;
+      display: block;
+    }
+    .card-desc {
+      margin-top: 18px;
+      color: #333;
+      font-size: 1em;
+      line-height: 1.7;
+      width: 100%;
+      word-break: break-all;
+      overflow-y: auto;
+      flex: 1 1 0;
+    }
+    .carousel-indicators {
+      text-align: center;
+      margin-top: 20px;
+      user-select: none;
+    }
+    .carousel-dot {
+      display: inline-block;
+      margin: 0 6px;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #ccc;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .carousel-dot.active {
+      background: #353535;
+    }
+    .fullscreen-modal {
+      position: fixed;
+      z-index: 10050;
+      left: 0; top: 0; right: 0; bottom: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #fff;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      margin: 0;
+      padding: 0;
+      animation: fadeIn 0.2s;
+    }
+    .fullscreen-modal.active {
+      display: flex;
+    }
+    .fullscreen-content-inner {
+      width: 95vw;
+      max-width: 100vw;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 12px 40px 4px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      box-sizing: border-box;
+      font-size: 1.35em;
+      cursor: zoom-out;
+      overflow: auto;
+      padding: 4vw 4vw 4vw 4vw;
+      max-height: 96vh;
+    }
+    .fullscreen-content-inner iframe {
+      width: 100%;
+      min-height: 220px;
+      height: 60vh;
+      border-radius: 10px;
+      border: none;
+      background: #fff;
+      margin-top: 8px;
+      display: block;
+    }
+    .fullscreen-content-inner .card-desc {
+      margin-top: 18px;
+      color: #333;
+      font-size: 1em;
+      line-height: 1.7;
+      width: 100%;
+      word-break: break-all;
+      overflow-y: auto;
+      flex: 1 1 0;
+      max-height: none;
+    }
+    .single-card-area .profile-card {
+  position: static;
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 420px;
+  max-width: 100%;
+  overflow: visible; /* 保證內容可見 */
+}
+.single-card-area .card-desc {
+  margin-top: 18px;
+  color: #333;
+  font-size: 20px;
+  line-height: 3;
+  width: 100%;
+  word-break: break-all;
+  max-height: unset;
+  flex: none; /* 不要讓它被壓縮 */
+  display: block;
+}
+h3{
+  font-size: 30px;
+}
+hr {
+  border: none;
+  border-top: 2px solid #b7b7b7;
+  margin: 30px 0;
+}
+.card-carousel {
+  min-height: 420px; /* 或設為你預期的最小高度 */
+  position: relative;
+}
+.card-carousel {
+  min-height: 420px;
+  position: relative;
+}
+.profile-card {
+  min-height: 420px;
+  /* 不要 height: 420px; */
+  /* 不要 max-height: 420px; */
+  /* 不要 overflow: hidden; */
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .4s, transform .4s;
+  transform: translateX(32px) scale(0.99);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.profile-card.active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 2;
+  position: relative;
+  transform: translateX(0) scale(1);
+}
+.card-desc {
+  margin-top: 18px;
+  color: #333;
+  font-size: 16px;
+  line-height: 2.2;
+  width: 100%;
+  word-break: break-all;
+  display: block;
+  /* 不要設overflow-y: auto或max-height，除非你想要捲軸 */
+}
+.card-carousel .profile-card {
+  overflow: visible !important;
+}
+.card-carousel .card-desc {
+  overflow: visible !important;
+  max-height: none !important;
+  flex: unset !important;
+  font-size: 18px;
+  line-height: 2.1;
+  display: block;
+}
+
+.h11{
+  font-size: 25px;
+  color: #505050;
+  font-weight: bold;
+}
+.label + a {
+    text-decoration: none;
+    color: #8f8f8f; /* 預設藍色，可自行調整 */
+    transition: color 0.3s ease; /* 平滑過渡效果 */
+  }
+
+  /* 懸停時變深色 */
+  .label + a:hover {
+    color: #515151; /* 深藍色，可調整色碼 */
+  }
+
+  /* 若需同時保持點擊後樣式 */
+  .label + a:visited {
+    color: #515151; /* 訪問過後的紫色 */
+  }
+    @media (max-width: 1200px) {
+      .sidebar {
+        width: 20vw;
+        min-width: 180px;
+        max-width: 300px;
+      }
+      .content {
+        margin-left: 20vw;
+        width: calc(80vw - 20px);
+      }
+    }
+    @media (max-width: 1000px) {
+      .sidebar {
+        width: 40vw;
+        min-width: 150px;
+        max-width: 250px;
+      }
+      .content {
+        margin-left: 40vw;
+        width: calc(60vw - 20px);
+      }
+}
+    @media (max-width: 900px) {
+      .sidebar {
+        width: 36vw;
+        min-width: 120px;
+        max-width: 220px;
+        padding: 24px 8px 8px 8px;
+      }
+      .content {
+        margin-left: 36vw;
+        width: calc(64vw - 20px);
+        padding: 16px 10px 40px 10px;
+      }
+      .card-carousel {
+        width: 98vw;
+        min-width: unset;
+        padding: 0;
+      }
+      .fullscreen-content-inner {
+        width: 98vw;
+        padding: 1vw;
+        font-size: 1.05em;
+      }
+    }
+    @media (max-width: 600px) {
+      .content {
+        margin-left: 0;
+        width: 100vw;
+        padding: 10px 4vw 40px 4vw;
+      }
+      .card-carousel {
+        width: 98vw;
+        min-width: unset;
+        padding: 0;
+      }
+      .fullscreen-content-inner {
+        width: 99vw;
+        padding: 0.5vw;
+        font-size: 1em;
+      }
+      .fullscreen-content-inner iframe {
+        height: 36vh !important;
+      }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0;}
+      to   { opacity: 1;}
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <nav class="nav">
+        <a href="#about" class="active">About me</a>
+        <a href="#profile">Profile</a>
+        <a href="#reflection">Reflection</a>
+      </nav>
+    </aside>
+    <main class="content">
+      <section id="about">
+        <h1>About me</h1>
+        <div class="info-block">
+          <span class="label">姓名：蕭語婕
+        </div>
+        <div class="info-block">
+          <span class="label">教育背景：高雄大學資管系
+        </div>
+        <h2>技術能力清單</h2>
+        <div class="info-block">
+          <span class="label">設計相關：</span>Ai, Blender, Creo, AutoCAD
+        </div>
+        <div class="info-block">
+          <span class="label">資管相關：</span>Python, C++, HTML+CSS
+        </div>
+        
+        <div class="info-block" style="margin-top:1.8em;">
+          <span class="label">聯絡資訊：</span>
+          <a href="mailto:a1123382@mail.nuk.edu.tw">a1123382@mail.nuk.edu.tw</a>
+        </div>
+      </section>
+      <section id="profile">
+        <h1>Profile</h1>
+        <h1 class="h11">資料介紹</h1>
+        <div class="profile-left-area">
+          <div class="single-card-area">
+            <div class="profile-card" tabindex="0"  style="margin-bottom:60px">
+              <div class="iframe-wrapper">
+                <iframe title="20250603_測站雨量站情室" width="100%" height="373.5" src="https://app.powerbi.com/view?r=eyJrIjoiYjVmMGZkMzEtMzQyZC00ODQyLTgyOTktYjhlNmJhODYxZTcwIiwidCI6IjVhNDg0OTUzLTc3ZWYtNDJlYy05MGNmLTJmNGUxMDM3ZmZjNyIsImMiOjEwfQ%3D%3D" frameborder="0" allowfullscreen="true"></iframe>
+              </div>
+              <div class="card-desc">
+              <h3>視覺化圖表分析與應用：<br></h3>
+          <strong>1. 樹狀圖（Treemap）</strong><br>
+          適用情境：呈現各縣市雨量佔比與層級關係<br>
+
+          台灣1-5月雨量樹狀圖點擊打開 Artifact
+          分析重點：<br>
+          屏東縣（400mm）佔南部總量 47%，反映梅雨鋒面滯留效應<br>
+          基隆市（280mm）顯示東北季風持續影響<br>
+          <hr> <!-- 這裡就是一條間隔線 --> 
+          <strong>2. 卡片圖（Card Layout）</strong><br>
+          適用情境：快速比較月份關鍵指標<br>
+          月份雨量卡片組點擊打開 Artifact
+          設計邏輯：<br>
+          色彩區分：藍色系表示正常範圍，紅色標記異常值（如5月減少 10%）<br>
+          互動擴展：可點擊卡片顯示詳細站點數據<br>
+          <hr> <!-- 這裡就是一條間隔線 --> 
+          <strong>3. 瀑布圖（Waterfall Chart）</strong><br>
+          適用情境：分析雨量逐月增減貢獻<br>
+          雨量變化瀑布圖點擊打開 Artifact
+          解讀範例：<br>
+          3月增幅（+55mm）反映華南水氣增強，佔春季雨量 36%<br>
+          總量柱狀圖可對比氣候平均值（近五年平均 890mm）<br>
+          <hr> <!-- 這裡就是一條間隔線 -->  
+          <strong>4. 區域圖（Area Chart）</strong><br>
+          適用情境：長期趨勢與極端事件標記<br>
+          雨量時序區域圖點擊打開 Artifact
+          進階應用：<br>
+          疊加乾旱警戒線（如<100mm/月）與暴雨閾值（>50mm/日）<br>
+          陰影標記梅雨開始日（2025年5月6日）<br>
+
+              </div>
+            </div>
+          </div>
+          <h3>以下是以「四級老年年齡分層標準」為基礎的完整分析框架，結合生理特徵、社會需求與政策對應，提供系統性介紹與潛在分析方向：<br></h3>
+          <!-- 輪播區(2~5) -->
+          <div class="card-carousel-container">
+            <div class="card-carousel" id="profile-carousel">
+              <!-- 第二張卡片 -->
+              <div class="profile-card active" tabindex="0">
+                <div class="iframe-wrapper">
+                  <iframe src="https://plotdb.io/v/chart/37479" width="100%" height="373.5" allowfullscreen="true" frameborder="0"></iframe>
+                </div>
+                <div class="card-desc">
+                  1. 準老年期（Pre-Old, 55-64歲）<br>
+                  <br>核心特徵：
+                  <br>生理轉折點：代謝率下降（基礎代謝率每十年減少1−2%）、荷爾蒙變化（如女性更年期）加速骨質流失。
+                  <br>健康風險：三高（高血壓、糖尿病、高血脂）發病率顯著上升，約 30% 人群出現亞健康狀態。
+                  <br>社會角色轉變：職場過渡：部分國家（如日本）實施「繼續雇用制度」，要求企業保障員工工作至 65 歲；台灣則推動「中高齡者及高齡者就業促進法」。
+                  <br>財務規劃關鍵期：退休金儲備缺口常在此階段浮現，需評估年金替代率（建議不低於70%）。<br>
+                  <br>分析方向：
+                  <br>比較各國「延後退休」政策對準老年群體就業率的影響。
+                  <br>探討健康促進計畫（如免費健檢）對慢性病早篩的效益。
+
+                </div>
+              </div>
+              <!-- 第三張卡片 -->
+              <div class="profile-card" tabindex="0">
+                <div class="iframe-wrapper">
+                  <iframe src="https://plotdb.io/v/chart/37483" width="100%" height="373.5" allowfullscreen="true" frameborder="0"></iframe>
+                </div>
+                <div class="card-desc">
+                  2. 初老期（Young-Old, 65-74歲）<br>
+                <br>活躍老化（Active Aging）指標：
+                <br>身體機能：肌肉量每年減少1−2%（若不訓練），但規律運動者可維持 80% 以上活動能力。
+                <br>認知健康：輕度認知障礙（MCI）發生率約 15−20%，但透過認知訓練可延緩退化 40%。
+                <br>社會參與瓶頸：
+                <br>孤獨感：退休後社交圈縮小，約 25%人群出現憂鬱傾向。
+                <br>再就業挑戰：歐洲國家（如德國）推動「銀髮人才中心」，但亞洲就業率普遍低於 20%。<br>
+                <br>分析方向：
+                <br>評估社區型課程（如運動社團）對心理健康的影响。
+                <br>分析「部分退休」制度（每週工作 20 小時）的可行性。
+
+                </div>
+              </div>
+              <!-- 第四張卡片 -->
+              <div class="profile-card" tabindex="0">
+                <div class="iframe-wrapper">
+                  <iframe src="https://plotdb.io/v/chart/37485" width="100%" height="373.5" allowfullscreen="true" frameborder="0"></iframe>
+                </div>
+                <div class="card-desc">
+                  3. 中老期（Middle-Old, 75-84歲）<br>
+                  <br>照護需求分水嶺：
+                  <br>失能風險：約 30% 需輔具（拐杖、輪椅），15% 需長期照護。
+                  <br>多重用藥：平均每日服用 5−7 種藥物，藥物交互作用風險上升 33 倍。
+                  <br>政策工具比較：
+                  <br>亞洲模式：台灣「長照 2.0」提供居家服務（補助70−90% 費用）。
+                  <br>北歐模式：瑞典以稅收支應全民照護，但財政負擔達 GDP 3.5%。<br>
+                  <br>分析方向：
+                  <br>比較「居家照護」與「機構照護」的成本效益比。
+                  <br>探討智慧科技（如跌倒偵測手環）降低醫療支出的潛力。
+
+                </div>
+              </div>
+              <!-- 第五張卡片 -->
+              <div class="profile-card" tabindex="0">
+                <div class="iframe-wrapper">
+                  <iframe src="https://plotdb.io/v/chart/37485" width="100%" height="600px" allowfullscreen="true" frameborder="0"></iframe>
+                </div>
+                <div class="card-desc">
+                  4. 老老期（Oldest-Old, 85+歲）<br>
+                <br>極端老化挑戰：
+                <br>疾病負擔： 60% 患兩種以上慢性病，失智症盛行率達 30−50%。
+                <br>人瑞研究：冰島研究顯示， 110+ 歲群體有獨特基因（如 FOXO3A 變異）。
+                <br>社會支持極限：
+                <br>照護人力缺口：日本預估2030 年需增加 30 萬名照護員。
+                <br>安寧療護：英國「死亡品質指數」顯示，僅 15% 高齡者能在偏好地點離世。<br>
+                <br>分析方向：
+                <br>分析「多代共居」政策（如荷蘭）對延緩機構安置的效果。
+                <br>評估基因檢測應用於長壽預防醫學的倫理爭議。
+
+                </div>
+              </div>
+              <div class="carousel-indicators">
+                <span class="carousel-dot active"></span>
+                <span class="carousel-dot"></span>
+                <span class="carousel-dot"></span>
+                <span class="carousel-dot"></span>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <h1 class="h11">設計思考實作</h1>
+        <div class="card-desc"><strong>第一顆鑽石：問題探索階段</strong><br>
+        <strong>自然環境層面：</strong>
+        <br>高雄地形複雜性：從玉山餘脈（海拔2,000m）到海岸線（海拔0m），同一降雨系統可能在山區引發土石流，卻在平原造成都市淹水
+        <br>極端氣候矛盾現象：2024年夏季，小港機場單日降雨破300mm，但同期那瑪夏區降雨不足50mm，反映現有測站無法捕捉「雨影效應」<br>
+        <strong>基礎設施層面：（YouBike 2.0站點分布特性）</strong>
+        <br>空間優勢：1,200站覆蓋全市，站距平均僅500m（都會區更達300m）
+        <br>硬體限制：現有站體未考慮氣象監測需求，臨海站點（如旗津站）感測器易受鹽霧腐蝕
+        <strong><br><br>第二顆鑽石：解決方案階段</strong>
+        <strong><br>技術整合方案：</strong>
+        <br>動態網格化監測：將行政區劃分為500m×500m網格，每個網格內YouBike站點數據自動加權平均
+        <br>山區數據填補策略：與部落合作，在教會、文化中心等既有建物屋頂加裝簡易感測器
+        <br>社會創新方案：
+        <br>「雨量觀測達人」市民認證：完成教育訓練者可獲取站點維護權限，協助清理感測器
+        <br>暴雨數據民主化：開放API供在地大學開發應用（如高師大文創系「暴雨聲景地圖」）
+        <strong><br>商業模式方案：</strong>
+        <br>雨天騎乘獎勵：累積「防災點數」兌換合作商家（如新崛江商圈）折扣
+        <br>保險加值服務：與產險業合作，提供YouBike用戶暴雨事故險
+        <strong><br><br>第二顆鑽石(找解方)：收斂</strong>
+        <strong><br>篩選機制：</strong>
+        <br>技術可行性：排除需衛星支援的方案（高雄峽谷地形影響訊號）
+        <br>成本效益：優先選擇每站升級成本低於NT$1萬的方案
+        <br>市民接受度：透過焦點團體測試原民部落對設備架設的意願
+        <br>最終推薦方案：
+        <strong><br>「分階段混合式部署」：</strong>
+        <br>短期（1年內）：
+        <br>選取200個關鍵站點（含20個山區部落站）升級，重點覆蓋防災熱區
+        <br>長期（3年）：
+        <br>發展「感測器即服務」（SaaS）模式，由商家贊助站點維護換取數據使用權
+         
+        </div>
+        
+        <!-- 全螢幕放大modal -->
+        <div class="fullscreen-modal" id="fullscreen-modal">
+          <div class="fullscreen-content" tabindex="0">
+            <div class="fullscreen-content-inner" id="fullscreen-content-inner">
+              <!-- 卡片內容動態插入 -->
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="reflection">
+        <h1>Reflection</h1>
+        <h1 class="h11">心得</h1>
+        <div class="card-desc"><strong>學習動機與期待</strong>
+        <strong><br>初始驅動力：</strong>
+作為資管系學生，選修「資料設計」課是為更充分的知道該如何對於資料能有設計能力「如何將冰冷數據轉化為有溫度的敘事」此一關鍵能力。原想像聚焦於不斷地討論討論及發想發散收斂，未預期會深入探討「數據」與「實戰經驗」。
+<strong><br>期待落差與驚喜：</strong>
+預期：學習工具技能 → 實際：掌握「DIKW模型」（Data→Information→Knowledge→Wisdom）的轉化框架
+<strong><br>意外收穫：</strong>
+透過「數據雕塑」讓我們與AI協作
+<strong><br>失望：</strong>
+原以為課堂助教能給予許多幫助但許多東西仍是摸索許久以及上網查資料才的到的答案
+<strong><br>個人反思與未來期許：</strong>
+<strong><br>未來期許</strong>
+對於這堂課對於我最有印象且最能廣為運用的是gitgub，之前雖然聽過但真沒真的使用過，雖然有的時候會覺得要跑兩分鐘才看得到結果很浪費時間，但畢竟是免費的架設網站，也不能強求，這學期的鎖血我都將利用暑假好好的再想過一次實行一次。
+      </section>
+    </main>
+  </div>
+  <script>
+    // 捲動時highlight nav
+    const navLinks = document.querySelectorAll('.nav a');
+    const sections = document.querySelectorAll('section');
+    window.addEventListener('scroll', () => {
+      let fromTop = window.scrollY + 70;
+      navLinks.forEach(link => {
+        let section = document.querySelector(link.getAttribute('href'));
+        if (
+          section.offsetTop <= fromTop &&
+          section.offsetTop + section.offsetHeight > fromTop
+        ) {
+          navLinks.forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
+        }
+      });
+    });
+    // 點擊nav平滑捲動
+    navLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        window.scrollTo({
+          top: target.offsetTop - 20,
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Profile輪播(只操作輪播卡片2~5)
+    (function () {
+      const carousel = document.getElementById('profile-carousel');
+      if (!carousel) return;
+      const cards = Array.from(carousel.querySelectorAll('.profile-card'));
+      const dots = Array.from(carousel.querySelectorAll('.carousel-dot'));
+      const fullscreenModal = document.getElementById('fullscreen-modal');
+      const fullscreenContent = document.getElementById('fullscreen-content-inner');
+      let current = 0;
+      let timer = null;
+      let expanded = false;
+
+      function syncCardHeights() {
+        const firstCard = cards[0];
+        if (!firstCard) return;
+        firstCard.style.display = "flex";
+        firstCard.style.height = "";
+        const height = firstCard.scrollHeight;
+        cards.forEach((card, i) => {
+          card.style.height = height + "px";
+        });
+      }
+
+      function showCard(idx) {
+        cards.forEach((card, i) => {
+          card.classList.toggle('active', i === idx);
+        });
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === idx));
+        current = idx;
+        expanded = false;
+        document.body.classList.remove("expanded-card");
+        fullscreenModal.classList.remove("active");
+        fullscreenContent.innerHTML = "";
+        syncCardHeights();
+      }
+      function nextCard() {
+        let next = (current + 1) % cards.length;
+        showCard(next);
+        if (expanded) showFullscreenCard(next);
+      }
+      function prevCard() {
+        let prev = (current - 1 + cards.length) % cards.length;
+        showCard(prev);
+        if (expanded) showFullscreenCard(prev);
+      }
+      function startTimer() {
+        clearInterval(timer);
+        timer = setInterval(nextCard, 6000);
+      }
+      function showFullscreenCard(idx) {
+        fullscreenContent.innerHTML = cards[idx].innerHTML;
+        fullscreenModal.classList.add("active");
+        document.body.classList.add("expanded-card");
+        expanded = true;
+      }
+      function expandCard(idx) {
+        showFullscreenCard(idx);
+        clearInterval(timer);
+      }
+      function collapseCard() {
+        expanded = false;
+        startTimer();
+        document.body.classList.remove("expanded-card");
+        fullscreenModal.classList.remove("active");
+        fullscreenContent.innerHTML = "";
+      }
+      cards.forEach((card, idx) => {
+        card.addEventListener('click', function(e) {
+          if (!expanded) {
+            expandCard(idx);
+          }
+        });
+        card.addEventListener('keydown', function(e) {
+          if ((e.key === "Enter" || e.key === " ") && !expanded) {
+            expandCard(idx);
+          }
+        });
+      });
+      dots.forEach((dot, idx) => {
+        dot.addEventListener('click', () => {
+          showCard(idx);
+          startTimer();
+          if (expanded) showFullscreenCard(idx);
+        });
+      });
+      window.addEventListener('keydown', function(e) {
+        if (e.key === "ArrowLeft") {
+          prevCard();
+          startTimer();
+        }
+        if (e.key === "ArrowRight") {
+          nextCard();
+          startTimer();
+        }
+        if (expanded && (e.key === "Escape" || e.key === " " || e.key === "Enter")) {
+          collapseCard();
+        }
+        if (!expanded && ((e.key === "Enter" || e.key === " ") && document.activeElement.classList.contains('profile-card'))) {
+          expandCard(current);
+        }
+      });
+      carousel.addEventListener('click', function(e) {
+        if (expanded) return;
+        if (e.target.classList.contains('profile-card')) return;
+        const rect = carousel.getBoundingClientRect();
+        if (e.clientX - rect.left < rect.width * 0.25) {
+          expandCard(current);
+        } else if (e.clientX - rect.left > rect.width * 0.75) {
+          expandCard(current);
+        }
+      });
+
+      // 初始化
+      showCard(0);
+      startTimer();
+      window.addEventListener('load', syncCardHeights);
+      window.addEventListener('resize', syncCardHeights);
+    })();
+
+    // 第一張卡片放大功能（獨立）
+    (function () {
+      const singleCard = document.querySelector('.single-card-area .profile-card');
+      const fullscreenModal = document.getElementById('fullscreen-modal');
+      const fullscreenContent = document.getElementById('fullscreen-content-inner');
+      if (!singleCard) return;
+
+      function openModal() {
+        fullscreenContent.innerHTML = singleCard.innerHTML;
+        fullscreenModal.classList.add("active");
+        document.body.classList.add("expanded-card");
+      }
+      function closeModal() {
+        fullscreenModal.classList.remove("active");
+        fullscreenContent.innerHTML = "";
+        document.body.classList.remove("expanded-card");
+      }
+      singleCard.addEventListener('click', openModal);
+      singleCard.addEventListener('keydown', function (e) {
+        if (e.key === "Enter" || e.key === " ") openModal();
+      });
+      fullscreenModal.addEventListener('click', function (e) {
+        if (e.target === fullscreenModal) closeModal();
+      });
+      window.addEventListener('keydown', function (e) {
+        if (!fullscreenModal.classList.contains("active")) return;
+        if (e.key === "Escape" || e.key === " " || e.key === "Enter") closeModal();
+      });
+    })();
+  </script>
+</body>
+</html>
