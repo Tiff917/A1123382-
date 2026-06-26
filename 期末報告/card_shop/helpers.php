@@ -68,13 +68,13 @@ function nav_is_active(string $path): string
 function require_login(array $roles = []): void
 {
     if (!is_logged_in()) {
-        set_flash('flash_error', '請先登入才能繼續。');
+        set_flash('flash_error', '請先登入後再使用這個功能。');
         redirect('signin.php');
     }
 
-    if ($roles !== [] && !in_array(current_user()['role'], $roles, true)) {
+    if ($roles !== [] && !in_array((string) current_user()['role'], $roles, true)) {
         http_response_code(403);
-        exit('您沒有權限瀏覽此頁面。');
+        exit('你沒有權限查看這個頁面。');
     }
 }
 
@@ -169,7 +169,7 @@ function fetch_user_by_id(int $userId): ?array
 
 function all_condition_tags(): array
 {
-    return ['未拆封', '近全新', '輕微瑕疵', '官方卡套', '限量特典', '稀有閃卡'];
+    return ['全新', '近全新', '官方', '裸卡', '微瑕', '已拆封'];
 }
 
 function preferred_groups(): array
@@ -255,7 +255,8 @@ function monthly_sales_summary(int $sellerId, string $month): array
 {
     $stmt = db()->prepare(
         'SELECT
-            COUNT(*) AS total_orders,
+            COUNT(DISTINCT o.product_id) AS total_orders,
+            COUNT(*) AS total_transactions,
             COALESCE(SUM(o.quantity), 0) AS total_cards,
             COALESCE(SUM(o.total_amount), 0) AS total_revenue
          FROM orders o
@@ -269,9 +270,55 @@ function monthly_sales_summary(int $sellerId, string $month): array
 
     return $stmt->fetch() ?: [
         'total_orders' => 0,
+        'total_transactions' => 0,
         'total_cards' => 0,
         'total_revenue' => 0,
     ];
+}
+
+function seller_monthly_group_revenue(int $sellerId, string $month): array
+{
+    $stmt = db()->prepare(
+        'SELECT
+            p.group_name,
+            COUNT(DISTINCT o.product_id) AS order_count,
+            COUNT(*) AS transaction_count,
+            COALESCE(SUM(o.quantity), 0) AS total_cards,
+            COALESCE(SUM(o.total_amount), 0) AS total_revenue
+         FROM orders o
+         INNER JOIN products p ON p.id = o.product_id
+         WHERE o.seller_id = :seller_id
+           AND DATE_FORMAT(o.created_at, "%Y-%m") = :month
+         GROUP BY p.group_name
+         ORDER BY total_revenue DESC, p.group_name ASC'
+    );
+    $stmt->execute([
+        'seller_id' => $sellerId,
+        'month' => $month,
+    ]);
+
+    return $stmt->fetchAll();
+}
+
+function seller_monthly_daily_orders(int $sellerId, string $month): array
+{
+    $stmt = db()->prepare(
+        'SELECT
+            DATE(o.created_at) AS order_date,
+            COUNT(*) AS order_count,
+            COALESCE(SUM(o.total_amount), 0) AS total_revenue
+         FROM orders o
+         WHERE o.seller_id = :seller_id
+           AND DATE_FORMAT(o.created_at, "%Y-%m") = :month
+         GROUP BY DATE(o.created_at)
+         ORDER BY order_date ASC'
+    );
+    $stmt->execute([
+        'seller_id' => $sellerId,
+        'month' => $month,
+    ]);
+
+    return $stmt->fetchAll();
 }
 
 function seller_monthly_orders(int $sellerId, string $month): array
@@ -302,9 +349,12 @@ function seller_monthly_orders(int $sellerId, string $month): array
 function font_candidates(): array
 {
     return [
-        'C:/Windows/Fonts/msjh.ttc',
-        'C:/Windows/Fonts/msjhbd.ttc',
-        'C:/Windows/Fonts/msyh.ttc',
+        'C:/Windows/Fonts/NotoSansTC-VF.ttf',
+        'C:/Windows/Fonts/NotoSansHK-VF.ttf',
+        'C:/Windows/Fonts/kaiu.ttf',
+        'C:/Windows/Fonts/STXIHEI.TTF',
+        'C:/Windows/Fonts/STKAITI.TTF',
+        __DIR__ . '/assets/fonts/msjh.ttc',
         'C:/Windows/Fonts/arial.ttf',
     ];
 }
@@ -320,46 +370,8 @@ function first_existing_font(): ?string
     return null;
 }
 
-function txt_product_overrides(): array
-{
-    return [
-        1 => [
-            'group_name' => 'TXT',
-            'name' => 'TXT Soobin Red Pop Photocard',
-            'description' => '真實拍攝的 TXT 小卡，紅色糖果自拍款，適合收藏與交換。',
-            'member_name' => 'Soobin',
-            'album_name' => 'TXT Special Collection',
-            'card_version' => 'Red Pop Selfie',
-            'card_code' => 'TXT-SOOBIN-REDPOP',
-            'condition_tags' => '近全新,真實拍攝',
-            'primary_image' => 'assets/txt-main.png',
-        ],
-        2 => [
-            'group_name' => 'TXT',
-            'name' => 'TXT Kai Wink Photocard',
-            'description' => '真實拍攝的 TXT Kai 小卡，黑色造型眨眼自拍款，整體狀態良好。',
-            'member_name' => 'Kai',
-            'album_name' => 'TXT Special Collection',
-            'card_version' => 'Black Outfit Wink',
-            'card_code' => 'TXT-KAI-WINK',
-            'condition_tags' => '近全新,真實拍攝',
-            'primary_image' => 'assets/txt-kai.png',
-        ],
-    ];
-}
-
 function normalize_product_display(array $product): array
 {
-    $productId = (int) ($product['id'] ?? 0);
-    $overrides = txt_product_overrides()[$productId] ?? null;
-    if ($overrides === null) {
-        return $product;
-    }
-
-    foreach ($overrides as $key => $value) {
-        $product[$key] = $value;
-    }
-
     return $product;
 }
 

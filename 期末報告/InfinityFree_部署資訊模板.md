@@ -1,36 +1,29 @@
 # InfinityFree 部署資訊模板
 
-這份文件請只保留模板內容，不要把真實帳密公開上傳。
+目前已確認的 InfinityFree 資訊如下：
 
-## 主機資訊
+- Hosting Account Username：`if0_42221742`
+- Domain：
+  - `cardshop.free.nf`
+- DB_HOST：`sql305.infinityfree.com`
+- DB_NAME：`if0_42221742_cardshop`
+- DB_USER：`if0_42221742`
+- DB_PASSWORD：`ipiYSC3aivZZuy`
+- FTP Host：
+- FTP Username：
+- FTP Password：
 
-- Hosting Account Username：`your_hosting_username`
-- Domain：`your-domain.example.com`
-- DB_HOST：`your-db-host.example.com`
-- DB_NAME：`your_database_name`
-- DB_USER：`your_database_user`
-- DB_PASSWORD：`your_database_password`
-- FTP Host：`your-ftp-host`
-- FTP Username：`your-ftp-username`
-- FTP Password：`your-ftp-password`
-
-## 需要修改的檔案
+## 部署完成後要改的檔案
 
 - `card_shop/config.php`
   - `DB_HOST`
   - `DB_NAME`
   - `DB_USER`
-  - `DB_PASS`
-  - `SMTP_USERNAME`
-  - `SMTP_PASSWORD`
-  - `MAIL_FROM_ADDRESS`
-- `card_shop/db_config.php`
-  - `$host`
-  - `$user`
-  - `$pass`
-  - `$db`
+- `DB_PASS`
+- `SMTP_USERNAME`
+- `SMTP_PASSWORD`
+- `MAIL_FROM_ADDRESS`
 
-## 提醒
+## 安全提醒
 
-- 公開上傳到 GitHub 前，請確認所有真實密碼都已改成範例值。
-- 建議把正式帳密只保留在本機版本，不要放進公開 repo。
+- 你這組資料庫密碼已經出現在截圖裡，部署完成後建議立刻改掉，並同步更新 `config.php` 與 `db_config.php`。

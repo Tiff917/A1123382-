@@ -33,7 +33,7 @@ if (!in_array($role, ['buyer', 'seller'], true)) {
 }
 
 if (strlen($password) < 6) {
-    set_flash('flash_error', '密碼至少要 6 個字元。');
+    set_flash('flash_error', '密碼至少需要 6 個字元。');
     redirect('register.php');
 }
 
@@ -49,7 +49,7 @@ $check->execute([
 ]);
 
 if ($check->fetch()) {
-    set_flash('flash_error', '這個帳號或 Email 已經被註冊。');
+    set_flash('flash_error', '這個帳號或 Email 已經被使用。');
     redirect('register.php');
 }
 
@@ -75,5 +75,5 @@ if ($user) {
     login_user($user);
 }
 
-set_flash('flash_success', '註冊成功，已經幫你登入。');
+set_flash('flash_success', '註冊成功，已自動登入。');
 redirect('member_center.php');

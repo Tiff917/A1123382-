@@ -13,54 +13,47 @@ require_once __DIR__ . '/partials/header.php';
 <section class="auth-block">
     <a class="back-link" href="signin.php">返回登入</a>
     <h2>註冊</h2>
-    <p class="muted auth-copy">建立你的 T's cashop 帳號，之後就能收藏、下單、查看交易紀錄。</p>
+    <p class="muted auth-copy">建立你的 T's cashop 帳號，開始收藏與上架喜歡的小卡。</p>
     <form method="post" action="register_process.php" class="auth-form">
         <div class="field">
             <div class="field-head">
-                <label for="display_name">暱稱</label>
-                <span class="field-hint">目前正在輸入暱稱</span>
+                <label for="display_name">顯示名稱</label>
             </div>
-            <input id="display_name" name="display_name" placeholder="想讓大家看到的名字" required>
+            <input id="display_name" name="display_name" placeholder="請輸入你的顯示名稱" required>
         </div>
         <div class="field">
             <div class="field-head">
                 <label for="username">帳號</label>
-                <span class="field-hint">目前正在輸入帳號</span>
             </div>
             <input id="username" name="username" placeholder="登入時會使用這個帳號" required>
         </div>
         <div class="field">
             <div class="field-head">
                 <label for="email">Email</label>
-                <span class="field-hint">目前正在輸入 Email</span>
             </div>
-            <input id="email" name="email" type="email" placeholder="用來接收訂單通知" required>
+            <input id="email" name="email" type="email" placeholder="請輸入可收信的 Email" required>
         </div>
         <div class="field">
             <div class="field-head">
                 <label for="phone">手機</label>
-                <span class="field-hint">目前正在輸入手機</span>
             </div>
-            <input id="phone" name="phone" placeholder="方便聯絡，可稍後再改">
+            <input id="phone" name="phone" placeholder="例如 0912345678">
         </div>
         <div class="field">
             <div class="field-head">
-                <label for="favorite_group">常收團體</label>
-                <span class="field-hint">目前正在輸入常收團體</span>
+                <label for="favorite_group">喜歡的團體</label>
             </div>
             <input id="favorite_group" name="favorite_group" placeholder="例如 TXT">
         </div>
         <div class="field">
             <div class="field-head">
-                <label for="address">收件地址</label>
-                <span class="field-hint">目前正在輸入地址</span>
+                <label for="address">地址</label>
             </div>
-            <input id="address" name="address" placeholder="可先留空，之後於會員中心補上">
+            <input id="address" name="address" placeholder="可填寫收件地址">
         </div>
         <div class="field">
             <div class="field-head">
-                <label for="role">身份</label>
-                <span class="field-hint">目前正在選擇身份</span>
+                <label for="role">身分</label>
             </div>
             <select id="role" name="role" required>
                 <option value="buyer">買家</option>
@@ -70,16 +63,14 @@ require_once __DIR__ . '/partials/header.php';
         <div class="field">
             <div class="field-head">
                 <label for="password">密碼</label>
-                <span class="field-hint">至少 6 個字元</span>
             </div>
-            <input id="password" name="password" type="password" minlength="6" placeholder="請設定密碼" required>
+            <input id="password" name="password" type="password" minlength="6" placeholder="至少 6 碼" required>
         </div>
         <div class="field">
             <div class="field-head">
                 <label for="password_confirm">確認密碼</label>
-                <span class="field-hint">再次輸入密碼</span>
             </div>
-            <input id="password_confirm" name="password_confirm" type="password" minlength="6" placeholder="再次輸入密碼" required>
+            <input id="password_confirm" name="password_confirm" type="password" minlength="6" placeholder="請再次輸入密碼" required>
         </div>
         <button type="submit">建立帳號</button>
     </form>

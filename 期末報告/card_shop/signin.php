@@ -12,19 +12,17 @@ require_once __DIR__ . '/partials/header.php';
 ?>
 <section class="auth-block">
     <h2>登入</h2>
-    <p class="muted auth-copy">回到 T's cashop，繼續收藏喜歡的小卡。</p>
+    <p class="muted auth-copy">回到 T's cashop，繼續收藏你喜歡的小卡。</p>
     <form method="post" action="signin_process.php" class="auth-form">
         <div class="field">
             <div class="field-head">
                 <label for="username">帳號</label>
-                <span class="field-hint">目前正在輸入帳號</span>
             </div>
             <input id="username" name="username" autocomplete="username" placeholder="請輸入帳號" required>
         </div>
         <div class="field">
             <div class="field-head">
                 <label for="password">密碼</label>
-                <span class="field-hint">目前正在輸入密碼</span>
             </div>
             <input id="password" name="password" type="password" autocomplete="current-password" placeholder="請輸入密碼" required>
         </div>

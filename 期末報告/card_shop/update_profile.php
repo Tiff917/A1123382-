@@ -16,7 +16,7 @@ $address = trim((string) ($_POST['address'] ?? ''));
 $newPassword = (string) ($_POST['new_password'] ?? '');
 
 if ($displayName === '' || $email === '') {
-    set_flash('flash_error', '暱稱和 Email 都需要填寫。');
+    set_flash('flash_error', '顯示名稱和 Email 都是必填欄位。');
     redirect('member_center.php');
 }
 
@@ -75,10 +75,9 @@ if ($newPassword !== '') {
 }
 
 $stmt->execute($params);
-$updatedUser = fetch_user_by_id(current_user()['id']);
+$updatedUser = fetch_user_by_id((int) current_user()['id']);
 if ($updatedUser) {
     login_user($updatedUser);
 }
 
-set_flash('flash_success', '會員資料已更新。');
 redirect('member_center.php');

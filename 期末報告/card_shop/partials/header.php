@@ -2,10 +2,38 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../helpers.php';
+
 $currentPage = basename($_SERVER['PHP_SELF']);
 $isAuthPage = in_array($currentPage, ['signin.php', 'register.php'], true);
 $showBottomTabs = !$isAuthPage && is_logged_in();
 $currentRole = (string) (current_user()['role'] ?? '');
+
+$topLinkHref = '';
+$topLinkText = '';
+
+if (!$isAuthPage) {
+    if ($currentRole === 'seller') {
+        $topLinkHref = 'monthly_report.php';
+        $topLinkText = '月報表';
+    } elseif ($currentRole === 'admin') {
+        $topLinkHref = 'admin_dashboard.php';
+        $topLinkText = '管理頁面';
+    } elseif (!is_logged_in()) {
+        $topLinkHref = 'register.php';
+        $topLinkText = '立即註冊';
+    }
+}
+
+$brandHref = 'signin.php';
+if (is_logged_in()) {
+    if ($currentRole === 'seller') {
+        $brandHref = 'seller_dashboard.php';
+    } elseif ($currentRole === 'admin') {
+        $brandHref = 'admin_dashboard.php';
+    } else {
+        $brandHref = 'product_list.php';
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="zh-Hant">
@@ -24,19 +52,12 @@ $currentRole = (string) (current_user()['role'] ?? '');
 </head>
 <body class="<?= $isAuthPage ? 'auth-page' : 'app-page' ?>">
 <header class="site-header <?= $isAuthPage ? 'compact-header' : '' ?>">
-    <a class="brand" href="<?= is_logged_in() ? 'index.php' : 'signin.php' ?>">T's cashop</a>
-    <?php if (!$isAuthPage && $currentRole === 'seller'): ?>
-        <a class="top-link" href="seller_dashboard.php">賣家中心</a>
-    <?php elseif (!$isAuthPage && $currentRole === 'admin'): ?>
-        <a class="top-link" href="admin_dashboard.php">管理後台</a>
-    <?php elseif (!$isAuthPage && !is_logged_in()): ?>
-        <a class="top-link" href="register.php">註冊</a>
+    <a class="brand" href="<?= h($brandHref) ?>">T's cashop</a>
+    <?php if ($topLinkHref !== '' && $topLinkText !== ''): ?>
+        <a class="top-link" href="<?= h($topLinkHref) ?>"><?= h($topLinkText) ?></a>
     <?php endif; ?>
 </header>
 <main class="page-shell <?= $isAuthPage ? 'auth-shell' : '' ?> <?= $showBottomTabs ? 'with-tabs' : '' ?>">
-<?php if ($flash = pop_flash('flash_success')): ?>
-    <div class="flash flash-success"><?= h($flash) ?></div>
-<?php endif; ?>
 <?php if ($flash = pop_flash('flash_error')): ?>
     <div class="flash flash-error"><?= h($flash) ?></div>
 <?php endif; ?>

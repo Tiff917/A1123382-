@@ -16,7 +16,7 @@ $cartProducts = [];
 if ($checkoutMode === 'cart') {
     $cartProducts = fetch_cart_products();
     if ($cartProducts === []) {
-        set_flash('flash_error', '購物車是空的，先挑幾張喜歡的小卡再來結帳。');
+        set_flash('flash_error', '購物車是空的，請先加入商品。');
         redirect('cart.php');
     }
 } else {
@@ -38,7 +38,7 @@ if ($checkoutMode === 'cart') {
     $product = $stmt->fetch();
 
     if (!$product) {
-        set_flash('flash_error', '找不到這張小卡。');
+        set_flash('flash_error', '找不到這張商品。');
         redirect('product_list.php');
     }
 
@@ -49,9 +49,7 @@ if ($checkoutMode === 'cart') {
 
 $pdo = db();
 $pdo->beginTransaction();
-$mailNotices = [];
 $checkedOutProducts = [];
-$grandTotal = 0.0;
 
 try {
     foreach ($cartProducts as $product) {
@@ -69,7 +67,7 @@ try {
         $liveProduct = $stockStmt->fetch();
 
         if (!$liveProduct || $liveProduct['status'] === 'sold_out' || (int) $liveProduct['stock'] < $quantity) {
-            throw new RuntimeException('商品庫存不足或已售完。');
+            throw new RuntimeException('商品庫存不足，請返回購物車重新確認。');
         }
 
         $liveProduct = normalize_product_display($liveProduct);
@@ -113,97 +111,40 @@ try {
 
         $checkedOutProducts[] = [
             'order_id' => $orderId,
-            'name' => $liveProduct['name'],
-            'group_name' => $liveProduct['group_name'],
-            'member_name' => $liveProduct['member_name'],
             'quantity' => $quantity,
             'total_amount' => $lineTotal,
+            'product' => $liveProduct,
         ];
-        $grandTotal += $lineTotal;
     }
 
     $pdo->commit();
 
     $buyer = fetch_user_by_id((int) current_user()['id']);
-    foreach ($checkedOutProducts as $index => $item) {
-        $sourceProduct = $cartProducts[$index];
-        $seller = fetch_user_by_id((int) $sourceProduct['seller_id']);
+    foreach ($checkedOutProducts as $item) {
+        $seller = fetch_user_by_id((int) $item['product']['seller_id']);
         if (!$buyer || !$seller) {
             continue;
         }
 
-        $notice = send_order_notifications([
+        send_order_notifications([
             'id' => $item['order_id'],
             'quantity' => $item['quantity'],
             'total_amount' => $item['total_amount'],
             'paid_at' => date('Y-m-d H:i:s'),
-        ], $buyer, $seller, $sourceProduct);
-
-        if ($notice) {
-            $mailNotices[] = $notice;
-        }
+        ], $buyer, $seller, $item['product']);
     }
 
+    $_SESSION['latest_order_ids'] = array_map(
+        static fn(array $item): int => (int) $item['order_id'],
+        $checkedOutProducts
+    );
     clear_cart();
-} catch (Throwable $e) {
-    $pdo->rollBack();
-    set_flash('flash_error', '結帳時發生問題，請重新確認購物車後再試一次。');
+    redirect('buyer_orders.php');
+} catch (Throwable) {
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+
+    set_flash('flash_error', '結帳失敗，請返回購物車再試一次。');
     redirect('cart.php');
 }
-
-$pageTitle = '結帳完成 | ' . APP_NAME;
-require_once __DIR__ . '/partials/header.php';
-?>
-<section class="app-section">
-    <div class="section-head">
-        <div>
-            <h2 class="section-title">結帳完成</h2>
-            <p class="muted">你的訂單已成立，現在可以回商品頁繼續逛，或前往會員中心查看紀錄。</p>
-        </div>
-        <span class="badge">已付款</span>
-    </div>
-</section>
-
-<section class="app-section">
-    <div class="simple-list">
-        <?php foreach ($checkedOutProducts as $item): ?>
-            <article class="list-row">
-                <div>
-                    <strong><?= h($item['name']) ?></strong>
-                    <p class="muted-small"><?= h($item['group_name']) ?> ・ <?= h($item['member_name']) ?></p>
-                    <p class="muted-small">訂單編號 #<?= (int) $item['order_id'] ?></p>
-                </div>
-                <div class="list-row-meta">
-                    <span>x<?= (int) $item['quantity'] ?></span>
-                    <strong><?= h(format_currency((float) $item['total_amount'])) ?></strong>
-                </div>
-            </article>
-        <?php endforeach; ?>
-    </div>
-</section>
-
-<section class="app-section">
-    <div class="simple-list">
-        <div class="list-row">
-            <strong>本次合計</strong>
-            <strong><?= h(format_currency($grandTotal)) ?></strong>
-        </div>
-        <div class="list-row">
-            <strong>通知狀態</strong>
-            <span class="muted-small"><?= $mailNotices === [] ? '郵件通知正常處理中' : h(implode(' / ', $mailNotices)) ?></span>
-        </div>
-    </div>
-</section>
-
-<section class="app-section">
-    <div class="section-head">
-        <h3 class="section-title">接下來</h3>
-    </div>
-    <div class="action-grid">
-        <a class="button secondary action-chip" href="product_list.php">繼續購物</a>
-        <a class="button secondary action-chip" href="cart.php">回購物車</a>
-        <a class="button secondary action-chip" href="member_center.php">看訂單紀錄</a>
-        <a class="button secondary action-chip" href="index.php">回首頁</a>
-    </div>
-</section>
-<?php require_once __DIR__ . '/partials/footer.php'; ?>

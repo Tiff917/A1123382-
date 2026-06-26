@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/check_remember.php';
-require_login(['seller', 'admin']);
+require_login(['seller']);
 
 function gd_add_watermark(string $sourcePath, string $destinationPath): bool
 {
@@ -23,11 +23,11 @@ function gd_add_watermark(string $sourcePath, string $destinationPath): bool
     if ($font && function_exists('imagettftext')) {
         $shadow = imagecolorallocatealpha($image, 255, 255, 255, 85);
         $textColor = imagecolorallocatealpha($image, 180, 120, 92, 58);
-        imagettftext($image, 14, 0, max(18, $width - 260), max(36, $height - 26), $shadow, $font, 'Milky Card Shop');
-        imagettftext($image, 14, 0, max(16, $width - 262), max(34, $height - 28), $textColor, $font, 'Milky Card Shop');
+        imagettftext($image, 14, 0, max(18, $width - 260), max(36, $height - 26), $shadow, $font, "T's cashop");
+        imagettftext($image, 14, 0, max(16, $width - 262), max(34, $height - 28), $textColor, $font, "T's cashop");
     } else {
         $textColor = imagecolorallocatealpha($image, 180, 120, 92, 58);
-        imagestring($image, 5, max(16, $width - 180), max(16, $height - 28), 'Milky Card Shop', $textColor);
+        imagestring($image, 5, max(16, $width - 180), max(16, $height - 28), "T's cashop", $textColor);
     }
 
     $saved = $mime === 'image/png'

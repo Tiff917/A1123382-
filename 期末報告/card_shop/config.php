@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-const DB_HOST = 'your-db-host.example.com';
+const DB_HOST = 'sql305.infinityfree.com';
 const DB_PORT = '3306';
-const DB_NAME = 'your_database_name';
-const DB_USER = 'your_database_user';
-const DB_PASS = 'your_database_password';
+const DB_NAME = 'if0_42221742_cardshop';
+const DB_USER = 'if0_42221742';
+const DB_PASS = 'ipiYSC3aivZZuy';
 
 const APP_NAME = "T's cashop";
 const APP_URL = 'https://cardshop.free.nf';
@@ -18,10 +18,11 @@ const REPORT_DIR = __DIR__ . '/uploads/reports';
 const REPORT_URL = 'uploads/reports';
 const SMTP_HOST = 'smtp.gmail.com';
 const SMTP_PORT = 465;
-const SMTP_USERNAME = 'your-email@example.com';
-const SMTP_PASSWORD = 'your-app-password';
+const SMTP_USERNAME = 'a1123382@mail.nuk.edu.tw';
+const SMTP_PASSWORD = 'xgczxkxubszbkuro';
 const SMTP_ENCRYPTION = 'ssl';
-const MAIL_FROM_ADDRESS = 'your-email@example.com';
+const MAIL_FROM_ADDRESS = 'a1123382@mail.nuk.edu.tw';
 const MAIL_FROM_NAME = APP_NAME;
 
 date_default_timezone_set('Asia/Taipei');
+

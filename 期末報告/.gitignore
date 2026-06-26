@@ -1,7 +1,6 @@
 # Runtime uploads
 card_shop/uploads/reports/
 card_shop/uploads/products/
-card_shop_upload_bundle.zip
 
 # Local environment
 .DS_Store

@@ -17,7 +17,7 @@ try {
     $user = $stmt->fetch();
 
     if (!$user || !password_verify($password, (string) ($user['password_hash'] ?? ''))) {
-        set_flash('flash_error', '帳號或密碼不正確，請重新輸入。');
+        set_flash('flash_error', '帳號或密碼錯誤，請重新輸入。');
         redirect('signin.php');
     }
 
@@ -27,7 +27,7 @@ try {
         issue_remember_token((int) $user['id']);
     }
 
-    set_flash('flash_success', '登入成功，已帶你回到首頁。');
+    set_flash('flash_success', '登入成功，歡迎回到 T\'s cashop。');
     redirect('index.php');
 } catch (Throwable $e) {
     $logPath = UPLOAD_DIR . '/signin-error.log';

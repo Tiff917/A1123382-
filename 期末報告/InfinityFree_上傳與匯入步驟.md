@@ -2,44 +2,48 @@
 
 ## 1. 上傳網站檔案
 
-- 開啟 InfinityFree File Manager
+- 打開 InfinityFree File Manager
 - 進入 `htdocs`
-- 將 `card_shop` 內所有網站檔案上傳到 `htdocs`
-- 確認首頁檔案與資源都在正確位置
+- 上傳 `card_shop` 資料夾內的所有內容到 `htdocs`
+- 不要把最外層 `期末報告` 資料夾整包丟進去
 
-## 2. 建立並匯入資料庫
+## 2. 匯入資料庫
 
-- 進入 `MySQL Databases`
-- 開啟 `phpMyAdmin`
-- 選擇你的正式資料庫
-- 匯入 `card_shop_infinityfree.sql`
+- 打開 `MySQL Databases`
+- 點 `phpMyAdmin`
+- 選擇資料庫 `if0_42221742_cardshop`
+- 匯入 `card_shop.sql`
 
-## 3. 匯入前注意
+## 3. 如果匯入失敗
 
-若 SQL 檔內含有下列語句，建議先刪除再匯入：
+InfinityFree 常見情況是不能執行：
 
 - `CREATE DATABASE`
 - `USE card_shop`
 
-這樣可以避免主機端因資料庫名稱不同而出錯。
+如果遇到這種情況，請先把 SQL 檔最前面這兩段移除後再重新匯入：
 
-## 4. 修改設定檔
+- `CREATE DATABASE ...`
+- `USE card_shop;`
 
-請把正式部署資訊填入：
+## 4. 站點設定
 
-- `APP_URL=https://your-domain.example.com`
-- `DB_HOST=your-db-host.example.com`
-- `DB_NAME=your_database_name`
-- `DB_USER=your_database_user`
-- `DB_PASS=your_database_password`
+目前部署版設定已改成：
 
-## 5. 上線後檢查
+- `APP_URL=https://cardshop.free.nf`
+- `DB_HOST=sql305.infinityfree.com`
+- `DB_NAME=if0_42221742_cardshop`
+- `DB_USER=if0_42221742`
 
-- `https://your-domain.example.com/signin.php`
-- `https://your-domain.example.com/register.php`
-- `https://your-domain.example.com/product_list.php`
+## 5. 上線後測試
+
+- `https://cardshop.free.nf/signin.php`
+- `https://cardshop.free.nf/register.php`
+- `https://cardshop.free.nf/product_list.php`
 
 ## 6. 安全提醒
 
-- 上傳到公開 GitHub 前，請先把 `config.php` 與 `db_config.php` 內的真實帳密改成範例值。
-- 正式版本請只保留在本機或私有備份中。
+- 目前資料庫密碼已曝光，網站可用後建議立即更換資料庫密碼
+- 改完後要同步更新：
+  - `config.php`
+  - `db_config.php`

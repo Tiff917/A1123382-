@@ -5,7 +5,7 @@ require_once __DIR__ . '/check_remember.php';
 require_login(['buyer']);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    redirect('index.php');
+    redirect('buyer_orders.php');
 }
 
 $orderId = (int) ($_POST['order_id'] ?? 0);
@@ -13,7 +13,7 @@ $rating = (int) ($_POST['rating'] ?? 0);
 $comment = trim((string) ($_POST['comment'] ?? ''));
 
 if ($rating < 1 || $rating > 5 || $comment === '') {
-    set_flash('flash_error', '請完整填寫評價內容。');
+    set_flash('flash_error', '請完整填寫評分與評價內容。');
     redirect('review.php?order_id=' . $orderId);
 }
 
@@ -25,7 +25,7 @@ $stmt->execute([
 $order = $stmt->fetch();
 
 if (!$order) {
-    set_flash('flash_error', '找不到對應訂單。');
+    set_flash('flash_error', '找不到這筆可評價的訂單。');
     redirect('member_center.php');
 }
 

@@ -15,19 +15,11 @@ $pageTitle = '購物車 | ' . APP_NAME;
 require_once __DIR__ . '/partials/header.php';
 ?>
 <section class="app-section">
-    <div class="section-head">
-        <div>
-            <h2 class="section-title">購物車</h2>
-            <p class="muted-small">確認想帶走的小卡，這裡可以刪除、繼續購物或直接結帳。</p>
-        </div>
-    </div>
-</section>
-
-<section class="app-section">
+    <h2 class="section-title">購物車</h2>
     <?php if ($cartProducts === []): ?>
-        <p class="muted-small">你的購物車目前是空的。</p>
+        <p class="muted-small">你的購物車目前是空的，可以先去挑選喜歡的小卡。</p>
         <div class="stack-row" style="margin-top: 18px;">
-            <a class="button secondary" href="product_list.php">繼續購物</a>
+            <a class="button secondary" href="product_list.php">返回商品</a>
         </div>
     <?php else: ?>
         <div class="products-grid">
@@ -35,16 +27,16 @@ require_once __DIR__ . '/partials/header.php';
                 <article class="product-item">
                     <div class="product-link">
                         <div class="product-cover">
-                            <img src="<?= h(product_primary_image($item['primary_image'])) ?>" alt="<?= h($item['name']) ?>">
+                            <img src="<?= h(product_primary_image($item['primary_image'])) ?>" alt="<?= h((string) $item['name']) ?>">
                         </div>
                         <div class="product-meta">
                             <div class="badge-row">
-                                <span class="badge"><?= h($item['group_name']) ?></span>
+                                <span class="badge"><?= h((string) $item['group_name']) ?></span>
                                 <span class="badge"><?= h(product_status_label((string) $item['status'], (int) $item['stock'])) ?></span>
                             </div>
-                            <h3><?= h($item['name']) ?></h3>
-                            <p class="muted-small"><?= h($item['member_name']) ?> ・ <?= h($item['card_version']) ?></p>
-                            <p class="muted-small">數量：<?= (int) $item['quantity'] ?></p>
+                            <h3><?= h((string) $item['name']) ?></h3>
+                            <p class="muted-small"><?= h((string) $item['member_name']) ?> / <?= h((string) $item['card_version']) ?></p>
+                            <p class="muted-small">數量 x<?= (int) $item['quantity'] ?></p>
                             <div class="price"><?= h(format_currency((float) $item['line_total'])) ?></div>
                             <form method="post" action="remove_from_cart.php" style="margin-top: 12px;">
                                 <input type="hidden" name="product_id" value="<?= (int) $item['id'] ?>">
@@ -56,18 +48,22 @@ require_once __DIR__ . '/partials/header.php';
             <?php endforeach; ?>
         </div>
 
-        <div class="simple-list" style="margin-top: 18px;">
-            <div class="list-row">
-                <span>合計</span>
-                <strong><?= h(format_currency($total)) ?></strong>
-            </div>
+        <div class="summary-grid" style="margin-top: 18px;">
+            <article class="summary-card">
+                <span class="metric-label">商品數量</span>
+                <strong class="metric-value"><?= count($cartProducts) ?></strong>
+            </article>
+            <article class="summary-card">
+                <span class="metric-label">結帳總額</span>
+                <strong class="metric-value"><?= h(format_currency($total)) ?></strong>
+            </article>
         </div>
 
-        <div class="stack-row" style="margin-top: 18px;">
-            <a class="button secondary" href="product_list.php">返回繼續購物</a>
-            <form method="post" action="checkout.php" style="flex: 1;">
+        <div class="action-grid" style="margin-top: 18px;">
+            <a class="button secondary action-chip" href="product_list.php">繼續購物</a>
+            <form method="post" action="checkout.php" style="margin: 0;">
                 <input type="hidden" name="checkout_mode" value="cart">
-                <button type="submit">前往結帳</button>
+                <button type="submit" class="action-chip">前往結帳</button>
             </form>
         </div>
     <?php endif; ?>
